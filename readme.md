@@ -1,6 +1,6 @@
 # EveMiningFleet
 
-**EveMiningFleet** est une plateforme web dédiée à la **gestion économique et logistique des flottes de minage** dans **:contentReference[oaicite:0]{index=0}**.  
+**EveMiningFleet** est une plateforme web dédiée à la **gestion économique et logistique des flottes de minage** dans **EVE ONLINE**.  
 Le projet fournit des outils de **centralisation, valorisation et redistribution** des minerais extraits lors d’opérations collectives.
 
 Site public : https://eveminingfleet.ovh
@@ -44,15 +44,10 @@ Le projet est conçu pour un **usage réel en production**, sur des flottes de t
 ---
 
 ## Calcul des prix
-
-Deux logiques coexistent :
-
-- **Prix direct**
-  - Meilleur ordre acheteur / vendeur
 - **Prix par percentile**
   - Calcul sur l’ensemble des ordres d’une région
   - Élimination des valeurs aberrantes
-  - Percentile configurable (ex. 98%)
+  - Percentile configurable (ex. 95%)
 
 Objectif : un **prix exploitable**, stable, non biaisé par des ordres artificiels.
 
