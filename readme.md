@@ -1,96 +1,94 @@
-# EveMiningFleet - EVE Partner
+# EveMiningFleet – EVE Partner
 
-**EveMiningFleet** est une plateforme web dédiée à la **gestion économique et logistique des flottes de minage** dans **EVE ONLINE**.  
-Le projet fournit des outils de **centralisation, valorisation et redistribution** des minerais extraits lors d’opérations collectives.
+**EveMiningFleet** is a web platform dedicated to the **economic and logistical management of mining fleets** in **EVE ONLINE**.  
+The project provides tools for **centralization, valuation, and redistribution** of ores extracted during collective operations.
 
-Site public : https://eveminingfleet.ovh
-
----
-
-## Finalité du projet
-
-- Structurer économiquement les flottes de minage
-- Éliminer les calculs manuels et approximatifs
-- Fournir une redistribution **traçable, reproductible et vérifiable**
-- Offrir une base exploitable pour corps et alliances industrielles
-
-Le projet est conçu pour un **usage réel en production**, sur des flottes de taille moyenne à large.
+Public site: https://eveminingfleet.ovh
 
 ---
 
-## Fonctionnalités principales
+## Project Purpose
 
-### Gestion de flotte
-- Création et administration de flottes minières
-- Gestion des participants et des rôles (mineurs, logistique, défense)
-- Droits d’accès configurables (lecture / écriture)
+- Economically structure mining fleets  
+- Eliminate manual and approximate calculations  
+- Provide **traceable, reproducible, and verifiable** redistribution  
+- Offer an exploitable foundation for industrial corporations and alliances  
 
-### Redistribution des minerais
-- Répartition proportionnelle au volume miné
-- Répartition équitable par type de minerai
-- Modèles personnalisés (taxes, parts fixes, rôles non-mineurs)
-
-### Valorisation économique
-- Calcul de valeur ISK basé sur le marché
-- Support des minerais compressés
-- Calculs par **percentile de marché** (anti-manipulation)
-- Région de référence configurable (ex. Jita)
-
-### Outils complémentaires
-- Analyse de rentabilité minière
-- Aide au choix des minerais à extraire (“What I Should Mine”)
-- Données exploitables pour automatisation externe
+The project is designed for **real production use**, targeting medium to large fleets.
 
 ---
 
-## Calcul des prix
-- **Prix par percentile**
-  - Calcul sur l’ensemble des ordres d’une région
-  - Élimination des valeurs aberrantes
-  - Percentile configurable (ex. 95%)
+## Main Features
 
-Objectif : un **prix exploitable**, stable, non biaisé par des ordres artificiels.
+### Fleet Management
+- Creation and administration of mining fleets  
+- Participant management  
+
+### Ore Redistribution
+- Proportional redistribution based on mined volume  
+- Fair redistribution based on volume and additional parameters  
+- Custom models (taxes, fixed shares, non-mining roles)  
+
+### Economic Valuation
+- ISK value calculation based directly on EVE Online market data  
+- Reference market: Jita 4–4 (Moon 4 – Caldari Navy Assembly Plant)  
+- Support for compressed ores  
+- **Market percentile–based** calculations (anti-manipulation)  
+
+### Additional Tools
+- Moon mining profitability analysis, including potential taxation using EVE Online moon ledger data  
+- Ore selection assistance (“What I Should Mine”)  
+---
+
+## Price Calculation
+
+**Percentile-based pricing**
+- Calculation over all market orders in a region  
+- Removal of outlier values  
+- Configurable percentile (e.g. 95%)  
+
+**Objective:** provide an **actionable**, stable price, not biased by artificial or manipulative orders.
 
 ---
 
-## Architecture (vue générale)
+## Architecture (High-Level)
 
-- Backend : .NET / ASP.NET
-- Données marché : ESI CCP
-- Base de données : MySQL
-- Déploiement : Linux + Docker
-- Frontend : Web (interface publique)
+- **Backend:** .NET / ASP.NET  
+- **Market Data:** CCP ESI  
+- **Database:** MySQL  
+- **Deployment:** Linux + Docker  
+- **Frontend:** Web (public interface)  
 
 ---
 
-## Variables d’environnement (extrait)
+## Environment Variables (Excerpt)
 
 ```text
-// Environnement d’exécution applicatif
+// Application runtime environment
 "ENVIRONMENT": "Development",
 
-// Chaîne de connexion base de données MySQL
-// ⚠️ À ne JAMAIS versionner avec de vrais identifiants
+// MySQL database connection string
+// ⚠️ Must NEVER be versioned with real credentials
 "DB_DATA_connectionstring": "sampledataconnectionstring",
 "DB_SESSION_connectionstring": "sampledataconnectionstring",
 
-// Flag applicatif : activation du scan des prix
-// 0 = désactivé, 1 = activé
+// Application flag: enable price scanning
+// 0 = disabled, 1 = enabled
 "PRICESCAN": "1",
 
-// Flag applicatif : activation du scan data du jeux pour trouver des minerais
-// 0 = désactivé, 1 = activé
+// Application flag: enable in-game data scan to discover ores
+// 0 = disabled, 1 = enabled
 "ORESCAN": "1",
 
-// Percentile utilisé pour le calcul du prix marché
+// Percentile used for market price calculation
 "PERCENTILEPRICE": "95,0",
 
-// Client ID OAuth EVE Online (ESI)
+// EVE Online OAuth Client ID (ESI)
 "EveESIClientId": "XXXXXXXXXXXXXXXXXXXXXXXX",
 
-// Secret OAuth EVE Online
+// EVE Online OAuth Secret
 "EveESISecretKey": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
 
-// URL de callback OAuth après authentification CCP
-// Doit correspondre EXACTEMENT à celle déclarée côté développeur CCP
+// OAuth callback URL after CCP authentication
+// Must EXACTLY match the one declared on the CCP developer side
 "EveESICallbackUrl": "https://localhost/Login/CallbackCCP"
