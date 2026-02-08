@@ -1,4 +1,4 @@
-# EveMiningFleet
+# EveMiningFleet - EVE Partner
 
 **EveMiningFleet** est une plateforme web dédiée à la **gestion économique et logistique des flottes de minage** dans **EVE ONLINE**.  
 Le projet fournit des outils de **centralisation, valorisation et redistribution** des minerais extraits lors d’opérations collectives.
