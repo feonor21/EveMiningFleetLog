@@ -1,0 +1,176 @@
+body {
+    min-width: 1000px;
+}
+main {
+    background: var(--main-background);
+    padding: 70px;
+    font-family: 'Open sans', sans-serif;
+}
+section {
+    background: var(--section-background);
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px #0001;
+    color: var(--section-color);
+}
+
+.character-page {
+    &__table {
+        // padding: 10px 25px 25px 25px;
+        overflow: hidden;
+
+        &__tabs {
+            display: flex;
+            height: 3em;
+            overflow: hidden;
+            background: var(--section-background);
+            position: relative;
+
+            input {
+                display: none;
+
+                &:checked + label a {
+                    font-weight: 600;
+                    cursor: unset;
+                }
+            }
+
+            label {
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(0deg, #0000000a 0%, transparent 20px);
+
+                a {
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100%;
+                    width: 100%;
+                    font-weight: 400;
+                    position: relative;
+                    background: transparent;
+                    z-index: 2;
+                    transition: font-weight 350ms linear;
+                }
+            }
+
+            &__background {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: calc(100% / 3);
+                height: 100%;
+                cursor: unset;
+                background: var(--section-background);
+                box-shadow: 0 0 20px #0001;
+                transition: left 500ms ease-in-out;
+
+                &:has(#tab1:checked) {
+                    left: 0;
+                }
+
+                &:has(#tab2:checked) {
+                    left: calc(100% / 3);
+                }
+
+                &:has(#tab3:checked) {
+                    left: calc(100% / 3 * 2);
+                }
+            }
+
+            #tab1:checked ~ &__background {
+                left: 0;
+            }
+
+            #tab2:checked ~ &__background {
+                left: calc(100% / 3);
+            }
+
+            #tab3:checked ~ &__background {
+                left: calc(100% / 3 * 2);
+            }
+        }
+
+        &__table {
+            margin: 2em 1em 1em 1em;
+            border-radius: 5px;
+            border: 1px solid var(--table-border);
+            overflow: hidden;
+
+            table {
+                font-weight: 200;
+                height: 100%;
+                width: 100%;
+                border: none;
+
+                tr {
+                    border-bottom: 0;
+                }
+
+                thead tr {
+                    border-width: 0;
+                }
+            }
+
+            .character-images {
+                position: relative;
+                height: calc(2em + 6px);
+                width: 5.2em;
+                display: inline-block;
+                margin-right: .8em;
+
+                img {
+                    height: 2em;
+                    width: 2em;
+                    border: 3px solid var(--section-color);
+                    border-radius: 50%;
+                    position: absolute;
+                    box-sizing: content-box;
+                    background-color: var(--section-background);
+                    top: 0;
+                    left: 0;
+                }
+
+                img:nth-child(1) {
+                    z-index: 3;
+                }
+
+                img:nth-child(2) {
+                    left: 1.6em;
+                    z-index: 2;
+                }
+
+                img:nth-child(3) {
+                    left: 3.2em;
+                    z-index: 1;
+                }
+            }
+
+            .viewreport {
+                text-align: end;
+                width: 100%;
+                text-decoration: none;
+                color: var(--table-color);
+                font-weight: 600;
+                font-size: 1.05em;
+                padding: .4em 0;
+
+                &::before {
+                    content: '';
+                    background: var(--table-arrow);
+                    background-size: cover;
+                    height: 1.2em;
+                    width: 1.2em;
+                    display: inline-block;
+                    vertical-align: text-bottom;
+                    margin-right: .5em;
+                    transition: transform 150ms cubic-bezier(0.1, 0.13, 0.27, 1.8);
+                }
+
+                &:hover::before {
+                    transform: translateX(4px);
+                }
+            }
+        }
+    }
+}

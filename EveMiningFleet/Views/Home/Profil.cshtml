@@ -1,0 +1,101 @@
+﻿@using Microsoft.AspNetCore.Http
+@{ var sessionUtility = _SessionUtility.DecryptSession(Context.Session.Get(_Constante._SessionUtility)); }
+
+<link rel="stylesheet" href="~/css/ProfilStyle.css" />
+
+
+<script type="text/javascript" src="~/js/datatable.js"></script>
+
+
+
+<main class="character-page" id="app">
+    <div class="Bandeau_Character">
+
+        <section class="Card_Main">
+            <img src="https://images.evetech.net/characters/@sessionUtility.MainCharacterID/portrait" title="@sessionUtility.AllCharacter[sessionUtility.MainCharacterID]" class="Card_Main--character">
+
+            <img src="https://images.evetech.net/corporations/@sessionUtility.MainCoorpID/logo" title="@sessionUtility.AllCoorp[sessionUtility.MainCoorpID]" class="Card_Main--corporation">
+
+            @if (@sessionUtility.MainAllianceID != 0)
+            {
+                <img src="https://images.evetech.net/alliances/@sessionUtility.MainAllianceID/logo" title="@sessionUtility.AllAlliance[sessionUtility.MainAllianceID]" class="Card_Main--alliance">
+            }
+
+            <div class="Card_Main--name">
+                <p>@sessionUtility.AllCharacter[sessionUtility.MainCharacterID]</p>
+            </div>
+
+        </section>
+
+        <section class="Bandeau_alt">
+            <div class="add_alts">
+                <a class="button button--small" asp-controller="Login" asp-action="LoginCCP">Add alts</a>
+            </div>
+            @{
+                foreach (var CharacterAlt in @sessionUtility.AllCharacter)
+                {
+                    var idfleet = CharacterFunction.GetFleetIdOfCharacter(CharacterAlt.Key);
+                        <div class="alt_Card">
+                            <p>@CharacterAlt.Value</p>
+                            <img src="https://images.evetech.net/characters/@CharacterAlt.Key/portrait" title="@CharacterAlt.Value">
+                            @if (idfleet > 0)
+                            {
+                                //my fleet
+                                <a class="fleet_button--view" asp-controller="Fleets" asp-action="Details" asp-route-FleetId="@idfleet">View fleet</a>
+                            }
+                            else
+                            {
+                                //create fleet
+                                <a class="fleet_button--create" asp-controller="Fleets" asp-action="Create" asp-route-CharacterID="@CharacterAlt.Key">Create fleet</a>
+                            }
+                        </div>
+                }
+            }
+        </section>
+
+    </div>
+
+    <section class="character-page__table">
+        <div class="character-page__table__tabs">
+            <input type="radio" name="tabs" value="tab1" id="tab1" checked>
+            <label for="tab1">
+                <a>character fleet history</a>
+            </label>
+
+            <input type="radio" name="tabs" value="tab2" id="tab2">
+            <label for="tab2">
+                <a>corporate fleet history</a>
+            </label>
+
+            <input type="radio" name="tabs" value="tab3" id="tab3">
+            <label for="tab3">
+                <a>alliance fleet history</a>
+            </label>
+
+            <div class="character-page__table__tabs__background"></div>
+        </div>
+
+        <div id="frame" class="character-page__table__table">
+
+
+        </div>
+
+        <script>
+        $(document).ready(function () {
+            $("#frame").load("@Url.Action("ProfilHistory", "Home", new {Type = 0})");
+
+            $("#tab1").click(function () {
+                $("#frame").load("@Url.Action("ProfilHistory", "Home", new {Type = 0})");
+            });
+            $("#tab2").click(function () {
+                $("#frame").load("@Url.Action("ProfilHistory", "Home", new {Type = 1})");
+            });
+            $("#tab3").click(function () {
+                $("#frame").load("@Url.Action("ProfilHistory", "Home", new {Type =2})");
+            });
+        });
+        </script>
+    </section>
+</main>
+
+

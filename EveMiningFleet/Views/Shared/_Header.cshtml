@@ -1,0 +1,69 @@
+﻿@using Microsoft.AspNetCore.Http
+@{ var sessionUtility = _SessionUtility.DecryptSession(Context.Session.Get(_Constante._SessionUtility)); }
+
+<link rel="stylesheet" href="~/css/headerStyle.css" />
+
+@if (sessionUtility.MainCharacterID > 0)
+{
+<header class="header">
+    <a class="header__title" asp-controller="Home" asp-action="Index">eve mining fleet</a>
+
+@*     <div class="header__annonce">
+            Tournament - october 15th to november 15th - More details on <a href="https://discord.gg/wkj7Sg62q">Discord</a>
+    </div> *@
+
+    <ul>
+        @if (sessionUtility.darkmode)
+        {
+            <li class="header__margin">
+                <a class="header__links" asp-controller="Login" asp-action="toogledarkmode">Light mode</a>
+            </li>
+        }
+        else
+        {
+            <li class="header__margin">
+                <a class="header__links" asp-controller="Login" asp-action="toogledarkmode">Dark mode</a>
+            </li>
+        }
+        <li>
+            <img class="header__portrait" src="https://images.evetech.net/characters/@sessionUtility.MainCharacterID/portrait"/>
+        </li>
+        <li class="header__margin">
+            <a class="header__links" asp-controller="Home" asp-action="Profil">
+                Profil
+                @sessionUtility.AllCharacter[@sessionUtility.MainCharacterID]
+            </a>
+        </li>
+        <li class="header__margin">
+            <a class="header__links" asp-controller="Home" asp-action="Logout">Logout</a>
+        </li>
+    </ul>
+</header>
+}
+
+@if (sessionUtility.MainCharacterID == 0 || @ViewBag.Title == "Accueil" || @ViewBag.Title == "Calcul reprocess" || @ViewBag.Title == "Report Moon ledger" || @ViewBag.Title == "What I Should Mine")
+{
+    <div class="banner">
+        <div class="banner__text">
+            <div>
+                <a class="banner__text__title" asp-controller="Home" asp-action="Index">eve mining fleet</a>
+                <div class="banner__text__subtitle">A website created by miners for miners</div>
+            </div>
+            <div class="banner__text__menu">
+                <div class="banner__text__menu__left">
+                    <a class="button" target="_blank" rel="noopener noreferrer" asp-controller="Tools" asp-action="Reprocess">Reprocess</a>
+                    <a class="button" target="_blank" rel="noopener noreferrer" asp-controller="Tools" asp-action="MoonReport">MoonLedger</a>
+                    <a class="button" target="_blank" rel="noopener noreferrer" asp-controller="Tools" asp-action="WhatIShouldMine">What I Should Mine</a>
+                </div>
+                <div class="banner__text__menu__middle">
+
+                </div>
+                <div class="banner__text__menu__right">
+                    <a class="login login--light" asp-controller="Login" asp-action="LoginCCP"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

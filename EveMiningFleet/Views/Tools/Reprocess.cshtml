@@ -1,0 +1,166 @@
+﻿@using Microsoft.AspNetCore.Http
+@{ var sessionUtility = _SessionUtility.DecryptSession(Context.Session.Get(_Constante._SessionUtility)); }
+
+@model EveMiningFleet.Models.ViewModel.ReprocessModel
+
+<link rel="stylesheet" href="~/css/ReprocessStyle.css" />
+
+
+<main>
+
+    @if (Model.ConversionOK)
+    {
+        <section>
+            <div class="Result">
+                <div class="table__border">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ORE</th>
+                                <th>Quantity</th>
+                                <th>Price Compressed Sell</th>
+                                <th>Price Compressed Buy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                double totalCompressedSell = 0.0;
+                                double totalCompressedBuy = 0.0;
+
+                                foreach (var Ore in Model.ReprocessOreModels)
+                                {
+                                    totalCompressedSell += Ore.Value.PriceCompressedSell;
+                                    totalCompressedBuy += Ore.Value.PriceCompressedBuy;
+                                }
+                            }
+                            <tr>
+                                <td>
+                                    Total
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayPrice(totalCompressedSell)
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayPrice(totalCompressedBuy)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            @foreach (var Ore in Model.ReprocessOreModels)
+                            {
+                            <tr>
+                                <td>
+                                    <img src="https://images.evetech.net/types/@Ore.Value.OreItem.Id/icon" width="26" height="26">@Ore.Value.OreItem.Name
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayQuantity(Ore.Value.quantity)
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayPrice(Ore.Value.PriceCompressedSell)
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayPrice(Ore.Value.PriceCompressedBuy)
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="table__border">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mineral</th>
+                                <th>Quantity</th>
+                                <th>Price Refined Sell</th>
+                                <th>Price Refined Buy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                double totalRefinedSell = 0.0;
+                                double totalRefinedBuy = 0.0;
+
+                                foreach (var Ore in Model.ReprocessOreMaterialModels)
+                                {
+                                    totalRefinedSell += Ore.Value.PriceRefinedSell;
+                                    totalRefinedBuy += Ore.Value.PriceRefinedBuy;
+                                }
+                            }
+                            <tr>
+                                <td>
+                                    Total
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayPrice(totalRefinedSell)
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayPrice(totalRefinedBuy)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            @foreach (var Mineral in Model.ReprocessOreMaterialModels)
+                            {
+                            <tr>
+                                <td>
+                                    <img src="https://images.evetech.net/types/@Mineral.Value.dataprice.TypeId/icon" width="26" height="26">@Mineral.Value.dataprice.Name
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayQuantity(Mineral.Value.Quantity)
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayPrice(Mineral.Value.PriceRefinedSell)
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayPrice(Mineral.Value.PriceRefinedBuy)
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    }
+
+
+    <section>
+        <form asp-controller="Tools" asp-action="Reprocess" method="post">
+            <div class="Calcul">
+                <div class="Calcul__Reprocess">
+                    <label for="ReprocessingEfficiency">Reprocessing Efficiency % :</label>
+                    <input asp-for="ReprocessingEfficiency" type="number" value="@Model.ReprocessingEfficiency">
+                </div>
+                <div class="Calcul__Taxe">
+                    <label for="Buyback">Jita Price % :</label>
+                    <input asp-for="Buyback" type="number" value="@Model.Buyback">
+                </div>
+            </div>
+            <div class="Rapport">
+                <label for="rapport">Rapport (Copy/paste your inventory here): </label>
+                <textarea asp-for="rapport">@Model.rapport</textarea>
+            </div>
+            <input class="button" type="submit" value="Calculate">
+        </form>
+    </section>
+
+</main>
+
+
+
+
+

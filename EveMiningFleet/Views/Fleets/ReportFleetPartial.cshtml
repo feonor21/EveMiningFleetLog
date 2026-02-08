@@ -1,0 +1,647 @@
+﻿@using Microsoft.AspNetCore.Http
+@using EveMiningFleet.Models.ViewModel
+@model EveMiningFleet.Entities.Tables.Fleet
+@{ var sessionUtility = _SessionUtility.DecryptSession(Context.Session.Get(_Constante._SessionUtility)); }
+
+@{
+    List<FleetRapportFunction.ReadRapportStructure> all = null;
+
+    bool firstGroup = false;
+    bool FirstOrigin = false;
+    int countLoot = 0;
+    string reprocessQuery = "";
+
+}
+
+
+
+<link rel="stylesheet" href="~/css/ReportFleetStyle.css">
+<script src="~/js/utilities.js"></script>
+<script defer src="~/js/ReportFleet.js"></script>
+
+<!--Bandeau des alt du joueur-->
+@if (@Model.End == null && sessionUtility.MainCharacterID > 0)
+{
+    <div class="Bandeau_Character">
+        <section class="Bandeau_alt">
+            <div class="add_alts">
+                <a class="button button--small" asp-controller="Login" asp-action="LoginCCP">Add alts</a>
+                <a class="fleet_button--join" asp-controller="Fleets" asp-action="JoinAll" asp-route-FleetId="@Model.Id" asp-route-Token="@Model.JoinToken" asp-route-MainCharId="@sessionUtility.MainCharacterID">Invite All Alts</a>
+            </div>
+            @{
+                foreach (var CharacterAlt in @sessionUtility.AllCharacter)
+                {
+                    var idfleet = CharacterFunction.GetFleetIdOfCharacter(CharacterAlt.Key);
+                        <div class="alt_Card">
+                            <p>@CharacterAlt.Value</p>
+                            <img src="https://images.evetech.net/characters/@CharacterAlt.Key/portrait" title="@CharacterAlt.Value">
+                            @if (idfleet == 0)
+                            {
+                                <a class="fleet_button--join" asp-controller="Fleets" asp-action="Join" asp-route-FleetId="@Model.Id" asp-route-Token="@Model.JoinToken" asp-route-CharacterID="@CharacterAlt.Key">Join fleet</a>
+                            }
+                            else if (idfleet == Model.Id)
+                            {
+                                if (Model.CharacterId == CharacterAlt.Key)
+                                {
+                                    <a class="fleet_button--disable" )>FC</a>
+                                }
+                                else
+                                {
+                                    <a class="fleet_button--quit" asp-controller="Fleets" asp-action="Quit" asp-route-FleetId="@Model.Id" asp-route-CharacterID="@CharacterAlt.Key">Quit fleet</a>
+                                }
+                            }
+                            else
+                            {
+                                <a class="fleet_button--view" asp-controller="Fleets" asp-action="Details" asp-route-FleetId="@idfleet" >In Another fleet</a>
+                            }
+                        </div>
+                }
+            }
+        </section>
+    </div>
+}
+
+<!--Section du Mining Log de la fleet-->
+<section class="fleet-mining-log">
+    <div class="fleet-mining-log__head">
+        <p>Create By : @Model.Character.Name at @_ToolsFrontEnd.DisplayDateTimeBasic(Model.Begin,sessionUtility.TimeZone) </p>
+        <h2>Fleet MiningLog</h2>
+        @if (@Model.End != null)
+        {
+            <p>Closed at @_ToolsFrontEnd.DisplayDateTimeBasic(Model.End.Value,sessionUtility.TimeZone)  </p>
+        }
+        else
+        {
+            @if (@Model.LastFullRefresh != null)
+            {
+                <p>Last refresh at @_ToolsFrontEnd.DisplayDateTimeBasic(Model.LastFullRefresh.Value,sessionUtility.TimeZone)  </p>
+            }
+        }
+    </div>
+    @if (@Model.End == null)
+    {
+        <div class="fleet-mining-log__tools">
+            <a class="button" target="_blank" rel="noopener noreferrer" asp-controller="Tools" asp-action="WhatIShouldMine">What I Should Mine</a>
+        </div>
+    }
+
+    <div class="fleet-mining-log__colum1">
+        <h3>Value of OREs mined</h3>
+        @{
+            List<EveMiningFleet.Models.ViewModel.FleetRapportFunction.ReadMiningLog> AllLot = EveMiningFleet.Models.ViewModel.FleetRapportFunction.GetAllLootFromFleet(Model);
+        }
+
+        <div class="table__border">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Price</th>
+                        <th>Sell</th>
+                        <th>Buy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Compress</td>
+                        <td>@_ToolsFrontEnd.DisplayPrice(@AllLot.Sum(x => x.PriceTotalCompressedSell))</td>
+                        <td>@_ToolsFrontEnd.DisplayPrice(@AllLot.Sum(x => x.PriceTotalCompressedBuy))</td>
+                    </tr>
+                    <tr>
+                        <td>Refined</td>
+                        <td>@_ToolsFrontEnd.DisplayPrice(@AllLot.Sum(x => x.PriceTotalRefinedSell))</td>
+                        <td>@_ToolsFrontEnd.DisplayPrice(@AllLot.Sum(x => x.PriceTotalRefinedBuy))</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Taxes</h3>
+        <div class="table__border">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>%</th>
+                        <th>Character</th>
+                        <th>
+                            @if (sessionUtility.AllCharacter.ContainsKey(Model.CharacterId))
+                            {
+                                <a class="button button--small fleet-mining-log__colum1__taxes-button" asp-controller="Fleets" asp-action="TaxeAdd" asp-route-FleetId="@Model.Id">Add Taxe</a>
+                            }
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var result in EveMiningFleet.Models.ViewModel.FleetRapportFunction.GetAllTaxeFromFleet(Model).OrderBy(x => x.Id))
+                    {
+                        <tr>
+                            <td>@result.Name</td>
+                            <td>@result.Taxe.ToString() %</td>
+                            @if (@result.Character != null)
+                            {
+                                <td>@result.Character.Name</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+
+                            @if (sessionUtility.AllCharacter.ContainsKey(Model.CharacterId))
+                            {
+                                <td>
+                                    <div class="button button--small popup_@result.Id-button" id="">Edit</div>
+                                    <div class="popup" id="popup_@result.Id">
+                                        <div class="popup__title">taxe 1 éditing</div>
+                                        <div class="popup__cross popup_@result.Id-button"></div>
+                                        <div class="popup__content">
+                                            <form action="/Fleets/TaxeEdit" method="post">
+                                                <input type="hidden" id="Id" name="FleetTaxeId" value="@result.Id" />
+
+                                                <label for="FleetTaxeName">Name :</label>
+                                                <input type="text" id="Name" name="FleetTaxeName" value="@result.Name" /><br />
+
+                                                <label for="FleetTaxeTaxe">Tax rate :</label>
+                                                <input type="number" name="FleetTaxeTaxe" value="@result.Taxe" min="0" max="100" /><br />
+
+                                                <label for="FleetTaxeCharacterId">Link to:</label>
+                                                <select id="Character" name="FleetTaxeCharacterId">
+                                                    <option selected="">Nobody</option>
+                                                    @foreach (var item in EveMiningFleet.Models.ViewModel.FleetRapportFunction.GetAllCharacterFromFleet(Model).OrderBy(x => x.Name))
+                                                    {
+                                                        <option value="@item.Id">@item.Name</option>
+                                                    }
+                                                </select><br />
+
+                                                <input class="button button--small" type="submit" value="update">
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="popup__background popup_@result.Id-button"></div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+
+                            @if (sessionUtility.AllCharacter.ContainsKey(Model.CharacterId))
+                            {
+                                <td>
+                                    <a class="button button--small" asp-controller="Fleets" asp-action="TaxeDelete" asp-route-FleetTaxeId="@result.Id">Delete</a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+        <h3>All Groups</h3>
+        <div class="table__border">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Main</th>
+                        <th>Alts</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var group in Model.Fleetgroups)
+                    {
+                        bool firstpass = true;
+                        foreach (var result in group.Fleetgroupcharacters)
+                        {
+                            <tr>
+                                @if (firstpass)
+                                {
+                                    <td rowspan="@(group.Fleetgroupcharacters.Count)" scope="rowgroup">
+                                        <div>
+                                            <span class="character-images">
+                                                <img src="https://images.evetech.net/characters/@result.Character.CharacterMain.Id/portrait" width="40" height="40">
+                                                @if (@result.Character.CharacterMain.CorporationId != 0)
+                                                {
+                                                    <img src="https://images.evetech.net/corporations/@result.Character.CharacterMain.CorporationId/logo" title="@result.Character.CharacterMain.Corporation.Name" width="40" height="40">
+                                                }
+                                                @if (@result.Character.CharacterMain.AllianceId != 0)
+                                                {
+                                                    <img src="https://images.evetech.net/alliances/@result.Character.CharacterMain.AllianceId/logo" title="@result.Character.CharacterMain.Alliance.Name" width="40" height="40">
+                                                }
+                                                
+                                            </span>
+                                            <p>@result.Character.CharacterMain.Name</p>
+                                        </div>
+                                    </td>
+                                    firstpass = false;
+                                }
+                                <td scope="row">@result.Character.Name</td>
+                                <td scope="row">
+                                    @if (Model.End == null &&
+sessionUtility.AllCharacter.ContainsKey(Model.CharacterId) &&
+EveMiningFleet.Models.CharacterFunction.GetFleetIdOfCharacter(@result.CharacterId) == Model.Id && @result.CharacterId != Model.CharacterId)
+                                    {
+                                        <a class="fleet_button--quit" asp-controller="Fleets" asp-action="Quit" asp-route-FleetId="@Model.Id" asp-route-CharacterID="@result.CharacterId">KICK</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="fleet-mining-log__colum2">
+        <h3>OREs mined</h3>
+        <div class="table__border">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ore</th>
+                        <th>Quantity</th>
+                        <th>Volume</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total</td>
+                        @{
+                            reprocessQuery = "";
+                            foreach (var result in AllLot)
+                            {
+                                reprocessQuery = reprocessQuery + @result.Name + "\t" + @result.Quantity.ToString() + "\r\n";
+                            }
+                        }
+                        <td>
+                            <a class="button" target="_blank" rel="noopener noreferrer" asp-controller="Tools" asp-action="Reprocess" asp-route-ReprocessingEfficiency="@Model.Reprocess" asp-route-rapport="@reprocessQuery"> View reprocess</a>
+                        </td>
+                        <td>@AllLot.Sum(x => x.VolumeTotal).ToString("#,##0") m³</td>
+                    </tr>
+                    @foreach (var result in AllLot.OrderByDescending(x => x.VolumeTotal))
+                    {
+                        <tr>
+                            <td><img src="https://images.evetech.net/types/@result.Ore_Id/icon" width="34" height="34">@result.Name</td>
+                            <td>@_ToolsFrontEnd.DisplayQuantity(@result.Quantity)</td>
+                            <td>@_ToolsFrontEnd.DisplayVolume(@result.VolumeTotal)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!--Bandeau de la gestion de la fleet-->
+@if (sessionUtility.AllCharacter.ContainsKey(@Model.CharacterId))
+{
+<section class="fleet-gestion">
+    <div class="fleet-gestion__head">
+        <h2>Fleet Gestion</h2>
+    </div>
+
+    <form action="/Fleets/EditOption" method="post">
+        <input type="hidden" id="FleetId" name="FleetId" value="@Model.Id">
+
+        <div class="fleet-gestion__Access">
+            <h3>Acces view of this fleet</h3>
+
+            <input type="radio" name="Access" id="Access0" value="0" @if (@Model.ViewRight == null || Model.ViewRight == 0) { <text> checked </text> }>
+            <label for="Access0"><span class="radio"></span>private</label>
+
+            <input type="radio" name="Access" id="Access1" value="1" @if (@Model.ViewRight != null && Model.ViewRight == 1) { <text> checked </text> }>
+            <label for="Access1"><span class="radio"></span>Corpo</label>
+
+            <input type="radio" name="Access" id="Access2" value="2" @if (@Model.ViewRight != null && Model.ViewRight == 2) { <text> checked </text> }>
+            <label for="Access2"><span class="radio"></span>Alliance</label>
+
+            <input type="radio" name="Access" id="Access3" value="3" @if (@Model.ViewRight != null && Model.ViewRight == 3) { <text> checked </text> }>
+            <label for="Access3"><span class="radio"></span>Public</label>
+
+        </div>
+
+        <div class="fleet-gestion__Distribution">
+            <h3>Redistribution of this fleet</h3>
+
+            <input type="radio" name="Distribution" id="Distribution0" value="0" @if (@Model.Distribution == null || Model.Distribution == 0) { <text> checked </text> }>
+            <label for="Distribution0">
+                <span class="radio"></span>
+                Real Mining
+                <span class="info">
+                    i
+                    <div class="info__text">Each character receives what they mined</div>
+                </span>
+            </label>
+            <input type="radio" name="Distribution" id="Distribution1" value="1" @if (@Model.Distribution != null && Model.Distribution == 1) { <text> checked </text> }>
+            <label for="Distribution1">
+                <span class="radio"></span>
+                Redistribution By Volume
+                <span class="info">
+                    i
+                    <div class="info__text">
+                        Which redistributes a part of each ore mined by the fleet in relation to the volume you mined.You will then have a percentage of the overall booty
+                    </div>
+                </span>
+            </label>
+            <input type="radio" name="Distribution" id="Distribution2" value="2" @if (@Model.Distribution != null && Model.Distribution == 2) { <text> checked </text> }>
+            <label for="Distribution2">
+                <span class="radio"></span>
+                Redistribution By Character
+                <span class="info">
+                    i
+                    <div class="info__text">Each character will receive a fair share of each ore mined by the fleet</div>
+                </span>
+            </label>
+        </div>
+
+        <div class="fleet-gestion__Reprocess">
+            <h3>Reprocessing efficiency (in %)</h3>
+            <input type="number" name="Reprocess" id="Reprocess" value="@Model.Reprocess" min="50" max="100">
+        </div>
+
+        <input class="button" type="submit" value="Update Fleet Setting">
+    </form>
+    @if (Model.End == null)
+    {
+        <div class="fleet-gestion__link">
+            <h3>Invitation Link</h3>
+            <div class="link">
+                    <button class="link__button" onclick="copyContent()"></button>
+                <div class="link__input-box"><input id="copylink" class="link__input-box__input" type="text" disabled="disabled" name="link" value="@Url.Action("JoinFleetByLink", "Login", new { JoinID = Model.Id, JoinToken = Model.JoinToken }, "https")"></div>
+            </div>
+        </div>
+
+        <script>
+            let text = document.getElementById('copylink').innerHTML;
+            navigator.permissions.query({ name: "write-on-clipboard" }).then((result) => {
+                  if (result.state == "granted" || result.state == "prompt") {
+                    alert("Write access granted!");
+                  }
+                });
+
+            const copyContent = async () => {
+                try {
+                    await navigator.clipboard.writeText(text);
+                } catch (err) {
+                    console.error('Failed to copy: ', err);
+                }
+            }
+        </script>
+
+        <div class="fleet-gestion__close">
+            <h3>Close Fleet</h3>
+            <div class="button popup_close-button">Close</div>
+            <div class="popup popup--small" id="popup_close">
+                <div class="popup__title">Close the Fleet ?</div>
+                <div class="popup__content">
+                    <div class="button button--dark popup_close-button">Cancel</div>
+                    <a href="@Url.Action("Close", "Fleets", new { FleetId = Model.Id })" class="button popup_close-button">Close</a>
+                </div>
+            </div>
+            <div class="popup__background popup_close-button"></div>
+        </div>
+    }
+</section>
+}
+
+<section class="light-rapport-by-group">
+    <div class="light-rapport-by-group__head">
+        <h2>Light Rapport By Group</h2>
+    </div>
+
+    <div class="table__border">
+        <table>
+            <thead>
+                <tr>
+                    <th>Groupe</th>
+                    <th>Ore</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    all = FleetRapportFunction.GetLightRapportFromFleet(Model, Model.Distribution);
+
+                    firstGroup = true;
+                    countLoot = 0;
+                    foreach (var group in all.GroupBy(x => x.NameParent))
+                    {
+                        firstGroup = true;
+                        countLoot = 0;
+                        foreach (var origin in group)
+                        {
+                            foreach (var loot in origin.loot)
+                            {
+                                countLoot += 1;
+                            }
+                        }
+
+
+                        @foreach (var origin in group)
+                        {
+                            reprocessQuery = "";
+                            foreach (var loot in origin.loot)
+                            {
+                                reprocessQuery = reprocessQuery + @loot.Name + "\t" + @loot.Quantity.ToString() + "\r\n";
+                            }
+                            foreach (var loot in origin.loot)
+                            {
+                                <tr>
+                                    @if (firstGroup)
+                                    {
+                                        <td rowspan="@countLoot" scope="rowgroup">
+                                            <div class="table__border">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                <div>
+                                                                    <span class="character-images">
+                                                                        <img src="https://images.evetech.net/characters/@origin.idCharacter/portrait" width="75" height="75">
+                                                                    </span>
+                                                                    <p>@origin.NameParent</p>
+                                                                    <a class="button" target="_blank" rel="noopener noreferrer" asp-controller="Tools" asp-action="Reprocess" asp-route-ReprocessingEfficiency="@Model.Reprocess" asp-route-rapport="@reprocessQuery"> View reprocess</a>
+                                                                </div>
+                                                            </th>
+                                                            <th>Sell</th>
+                                                            <th>Buy</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="col">Compress</th>
+                                                            <th scope="col">@_ToolsFrontEnd.DisplayPrice(@origin.loot.Sum(x => x.PriceTotalCompressedSell))</th>
+                                                            <th scope="col">@_ToolsFrontEnd.DisplayPrice(@origin.loot.Sum(x => x.PriceTotalCompressedBuy))</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="col">Refined</th>
+                                                            <th scope="col">@_ToolsFrontEnd.DisplayPrice(@origin.loot.Sum(x => x.PriceTotalRefinedSell))</th>
+                                                            <th scope="col">@_ToolsFrontEnd.DisplayPrice(@origin.loot.Sum(x => x.PriceTotalRefinedBuy))</th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                        firstGroup = false;
+                                    }
+
+                                    <td scope="row"><img src="https://images.evetech.net/types/@loot.Ore_Id/icon" width="34" height="34">@loot.Name</td>
+                                    <td scope="row">@_ToolsFrontEnd.DisplayFullQuantity(@loot.Quantity)</td>
+                                </tr>
+
+                            }
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="rapport-by-group">
+    <div class="rapport-by-group__head">
+        <h2>Rapport By Group</h2>
+    </div>
+
+    <div class="table__border">
+        <table>
+            <thead>
+                <tr>
+                    <th>Main</th>
+                    <th>Character</th>
+                    <th>Ore</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    all = FleetRapportFunction.GetRapportFromFleet(Model, Model.Distribution);
+
+                    firstGroup = true;
+                    FirstOrigin = true;
+                    countLoot = 0;
+                    foreach (var group in all.GroupBy(x => x.NameParent))
+                    {
+                        firstGroup = true;
+                        countLoot = 0;
+                        foreach (var origin in group)
+                        {
+                            if (origin.loot != null)
+                            {
+                                foreach (var loot in origin.loot)
+                                {
+                                    countLoot += 1;
+                                }
+                            }
+                            else
+                            {
+                                countLoot += 1;
+                            }
+                        }
+
+                        foreach (var origin in group)
+                        {
+                            FirstOrigin = true;
+                            if (origin.loot != null)
+                            {
+                                foreach (var loot in origin.loot)
+                                {
+                                    <tr>
+                                        @if (firstGroup)
+                                        {
+                                            <td rowspan="@countLoot" scope="rowgroup">@group.Key</td>
+                                            firstGroup = false;
+                                        }
+                                        @if (FirstOrigin)
+                                        {
+                                            <td rowspan="@origin.loot.Count" scope="rowgroup">@origin.Namecharacter</td>
+                                            FirstOrigin = false;
+                                        }
+                                        <td scope="row">@loot.Name</td>
+                                        <td scope="row">@_ToolsFrontEnd.DisplayFullQuantity(@loot.Quantity)</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    @if (firstGroup)
+                                    {
+                                        <td rowspan="@countLoot" scope="rowgroup">@group.Key</td>
+                                        firstGroup = false;
+                                    }
+                                    @if (FirstOrigin)
+                                    {
+                                        <td rowspan="1" scope="rowgroup">@origin.Namecharacter</td>
+                                        FirstOrigin = false;
+                                    }
+                                </tr>
+                            }
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="mining-log-by-player">
+    <div class="mining-log-by-player__head">
+        <h2>Mining Log By Character</h2>
+    </div>
+
+    <div class="table__border">
+        <table>
+            <thead>
+                <tr>
+                    <th>Character</th>
+                    <th>Ore</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in Model.Fleetcharacters.GroupBy(x => x.Character.Name))
+                {
+                    bool firstpass = true;
+                    Dictionary<string, int> ListResult = new Dictionary<string, int>();
+                    foreach (var fleetchar in group)
+                    {
+                        foreach (EveMiningFleet.Entities.Tables.Mininglog mininglog in fleetchar.Mininglogs)
+                        {
+                            if (!ListResult.ContainsKey(mininglog.Ore.Name))
+                            {
+                                ListResult.Add(mininglog.Ore.Name, 0);
+                            }
+                            ListResult[mininglog.Ore.Name] += mininglog.Quantity;
+                        }
+                    }
+                    foreach (var result in ListResult)
+                    {
+                        <tr>
+                            @if (firstpass)
+                            {
+                                <td rowspan="@ListResult.Count">@group.Key</td>
+                                firstpass = false;
+                            }
+                            <td>@result.Key</td>
+                            <td>@_ToolsFrontEnd.DisplayFullQuantity(@result.Value)</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+
+
+
+
+
+

@@ -1,0 +1,42 @@
+{
+    "profiles": {
+        "Project": {
+            // Indique que l’exécution se fait via un projet .NET (dotnet run)
+            "commandName": "Project",
+            "environmentVariables": {
+                // Environnement d’exécution applicatif
+                // Utilisé typiquement pour charger appsettings.Development.json
+                "ENVIRONMENT": "Development",
+
+                // Chaîne de connexion base de données MySQL
+                // ⚠️ À ne JAMAIS versionner avec de vrais identifiants
+                "DB_DATA_connectionstring": "sampledataconnectionstring",
+
+                // Flag applicatif : activation du scan des prix
+                // 0 = désactivé, 1 = activé
+                "PRICESCAN": "0",
+
+                // Flag applicatif : activation du scan des minerais
+                // 0 = désactivé, 1 = activé
+                "ORESCAN": "0",
+
+                // Percentile utilisé pour le calcul du prix marché
+                // Attention : format dépend de la culture courante (95,0 vs 95.0)
+                // Recommandé : normaliser en invariant culture côté code
+                "PERCENTILEPRICE": "95,0",
+
+                // Client ID OAuth EVE Online (ESI)
+                // Identifie ton application auprès de CCP
+                "EveESIClientId": "XXXXXXXXXXXXXXXXXXXXXXXX",
+
+                // Secret OAuth EVE Online
+                // Doit être stocké en variable d’environnement réelle / secret manager
+                "EveESISecretKey": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+
+                // URL de callback OAuth après authentification CCP
+                // Doit correspondre EXACTEMENT à celle déclarée côté développeur CCP
+                "EveESICallbackUrl": "https://localhost:1555/Login/CallbackCCP"
+            }
+        }
+    }
+}

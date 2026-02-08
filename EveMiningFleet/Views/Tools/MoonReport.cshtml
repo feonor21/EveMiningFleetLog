@@ -1,0 +1,221 @@
+﻿@using Microsoft.AspNetCore.Http
+@{ var sessionUtility = _SessionUtility.DecryptSession(Context.Session.Get(_Constante._SessionUtility)); }
+
+@model EveMiningFleet.Models.ViewModel.ReportMoonModel
+
+<link rel="stylesheet" href="~/css/MoonReportStyle.css" />
+
+<main>
+    @if (Model.ConversionOK)
+    {
+        <section>
+            <div class="Result">
+                <div class="table__border">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Corp/moon</th>
+                                <th>Member/total corp</th>
+                                <th>Ore</th>
+                                <th>Taxe</th>
+                                <th>Gain</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                bool firstlignecorp = true;
+                                bool firstlignecharacter = true;
+                                int countrowspanCorp = Model.Ores.Count;
+                            }
+
+
+
+
+                            @foreach (var ore in Model.Ores)
+                            {
+                                <tr>
+                                    @if (firstlignecorp)
+                                    {
+                                        <td rowspan="@countrowspanCorp" scope="rowgroup">
+                                            <div class="table__border">
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>MOON</th>
+                                                            <th>Taxe</th>
+                                                            <th>gain</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="col"></th>
+                                                            <th scope="col">@_ToolsFrontEnd.DisplayPrice(Model.PriceTAXE)</th>
+                                                            <th scope="col">@_ToolsFrontEnd.DisplayPrice(Model.Pricegain)</th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                        firstlignecorp = false;
+                                    }
+                                    @if (firstlignecharacter)
+                                    {
+                                        <td rowspan="@countrowspanCorp" scope="rowgroup">
+                                        </td>
+                                        firstlignecharacter = false;
+                                    }
+                                    <td><img src="https://images.evetech.net/types/@ore.Key/icon" width="26" height="26">@ore.Value.Name</td>
+                                    <td>@_ToolsFrontEnd.DisplayFullQuantity(ore.Value.QuantityTAXE)</td>
+                                    <td>@_ToolsFrontEnd.DisplayFullQuantity(ore.Value.Quantitygain)</td>
+                                </tr>
+                            }
+
+
+
+                            @foreach (var Corp in Model.Coorporations)
+                            {
+                                firstlignecorp = true;
+                                firstlignecharacter = true;
+
+                                countrowspanCorp = 0;
+                                foreach (var Character in Corp.Value.Characters)
+                                {
+                                    countrowspanCorp += Character.Value.Ores.Count;
+                                }
+                                countrowspanCorp += Corp.Value.Ores.Count;
+
+
+                                // premier ligne row COORP
+                                @foreach (var ore in Corp.Value.Ores)
+                                {
+                                    <tr>
+                                        @if (firstlignecorp)
+                                        {
+                                            <td rowspan="@countrowspanCorp" scope="rowgroup">
+                                                <div class="table__border">
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>@Corp.Key</th>
+                                                                <th>Taxe</th>
+                                                                <th>gain</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th scope="col"></th>
+                                                                <th scope="col">@_ToolsFrontEnd.DisplayPrice(Corp.Value.PriceTAXE)</th>
+                                                                <th scope="col">@_ToolsFrontEnd.DisplayPrice(Corp.Value.Pricegain)</th>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+
+                                            firstlignecorp = false;
+                                        }
+                                        @if (firstlignecharacter)
+                                        {
+                                            <td rowspan="@Corp.Value.Ores.Count" scope="rowgroup">
+                                                <div class="table__border">
+                                                    <table>
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Total coorp : @Corp.Key</th>
+                                                                <th>Taxe</th>
+                                                                <th>gain</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th scope="col"></th>
+                                                                <th scope="col">@_ToolsFrontEnd.DisplayPrice(Corp.Value.PriceTAXE)</th>
+                                                                <th scope="col">@_ToolsFrontEnd.DisplayPrice(Corp.Value.Pricegain)</th>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                            firstlignecharacter = false;
+                                        }
+                                        <td><img src="https://images.evetech.net/types/@ore.Key/icon" width="26" height="26">@ore.Value.Name</td>
+                                        <td>@_ToolsFrontEnd.DisplayFullQuantity(ore.Value.QuantityTAXE)</td>
+                                        <td>@_ToolsFrontEnd.DisplayFullQuantity(ore.Value.Quantitygain)</td>
+                                    </tr>
+                                }
+
+
+
+                                @foreach (var Character in Corp.Value.Characters)
+                                {
+                                    firstlignecharacter = true;
+
+                                    @foreach (var ore in Character.Value.Ores)
+                                    {
+                                        <tr>
+                                            @if (firstlignecharacter)
+                                            {
+                                                <td rowspan="@Character.Value.Ores.Count" scope="rowgroup">
+                                                    <div class="table__border">
+                                                        <table>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>@Character.Key</th>
+                                                                    <th>Taxe</th>
+                                                                    <th>gain</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="col"></th>
+                                                                    <th scope="col">@_ToolsFrontEnd.DisplayPrice(Character.Value.PriceTAXE)</th>
+                                                                    <th scope="col">@_ToolsFrontEnd.DisplayPrice(Character.Value.Pricegain)</th>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                                firstlignecharacter = false;
+                                            }
+                                            <td><img src="https://images.evetech.net/types/@ore.Key/icon" width="26" height="26">@ore.Value.Name</td>
+                                            <td>@_ToolsFrontEnd.DisplayFullQuantity(ore.Value.QuantityTAXE)</td>
+                                            <td>@_ToolsFrontEnd.DisplayFullQuantity(ore.Value.Quantitygain)</td>
+                                        </tr>
+                                    }
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    }
+
+
+    <section>
+        <form asp-controller="Tools" asp-action="MoonReport" method="post">
+            <div class="Calcul">
+                <div class="Calcul__Reprocess">
+                    <label for="Reprocess">Reprocess:</label>
+                    <input asp-for="Reprocess" type="number" value="@Model.Reprocess">
+                </div>
+                <div class="Calcul__sellorder">
+                    <label for="sellorder">Sell order calculation:</label>
+                    <label>@Html.CheckBox("sellorder", @Model.sellvalue)</label>
+                </div>
+                <div class="Calcul__Taxe">
+                    <label for="Taxe">Taxe:</label>
+                    <input asp-for="Taxe" type="number" value="@Model.Taxe">
+                </div>
+            </div>
+            <div class="Rapport">
+                <label for="Rapport">Rapport (Copy/paste your moon's MiningLedger here): </label>
+                <textarea asp-for="Rapport">@Model.Rapport</textarea>
+            </div>
+            <input class="button" type="submit" value="Calculate">
+        </form>
+    </section>
+</main>
+
+

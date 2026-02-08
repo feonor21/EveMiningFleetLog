@@ -1,0 +1,54 @@
+﻿[
+  {
+    "outputFile": "wwwroot/css/CCPCopyrightStyle.css",
+    "inputFile": "wwwroot/css/CCPCopyrightStyle.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/color.css",
+    "inputFile": "wwwroot/css/color.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/colordarkmode.css",
+    "inputFile": "wwwroot/css/colordarkmode.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/footerStyle.css",
+    "inputFile": "wwwroot/css/footerStyle.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/global.css",
+    "inputFile": "wwwroot/css/global.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/globalResponsive.css",
+    "inputFile": "wwwroot/css/globalResponsive.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/headerStyle.css",
+    "inputFile": "wwwroot/css/headerStyle.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/Home_IndexStyle.css",
+    "inputFile": "wwwroot/css/Home_IndexStyle.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/MoonReportStyle.css",
+    "inputFile": "wwwroot/css/MoonReportStyle.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/ProfilStyle.css",
+    "inputFile": "wwwroot/css/ProfilStyle.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/ReportFleetStyle.css",
+    "inputFile": "wwwroot/css/ReportFleetStyle.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/ReprocessStyle.css",
+    "inputFile": "wwwroot/css/ReprocessStyle.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/WhatIShouldMineStyle.css",
+    "inputFile": "wwwroot/css/WhatIShouldMineStyle.scss"
+  }
+]

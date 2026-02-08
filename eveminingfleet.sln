@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EveMiningFleet", "eveminingfleet\EveMiningFleet.csproj", "{09B06DBA-B494-4675-813B-54D3240C52BF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EveMiningFleet.Cron", "EveMiningFleet.Cron\EveMiningFleet.Cron.csproj", "{986B299A-8FF9-4293-BD2B-3BD7E6530B52}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EveMiningFleet.Entities", "EveMiningFleet.Entities\EveMiningFleet.Entities.csproj", "{2E215068-CF55-4E02-AE85-21D3D8080DAF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EveMiningFleet.Logic", "EveMiningFleet.Logic\EveMiningFleet.Logic.csproj", "{55B89560-0E32-4FE9-9B8A-E0E588DDAF66}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{09B06DBA-B494-4675-813B-54D3240C52BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09B06DBA-B494-4675-813B-54D3240C52BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09B06DBA-B494-4675-813B-54D3240C52BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09B06DBA-B494-4675-813B-54D3240C52BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{986B299A-8FF9-4293-BD2B-3BD7E6530B52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{986B299A-8FF9-4293-BD2B-3BD7E6530B52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{986B299A-8FF9-4293-BD2B-3BD7E6530B52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{986B299A-8FF9-4293-BD2B-3BD7E6530B52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E215068-CF55-4E02-AE85-21D3D8080DAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E215068-CF55-4E02-AE85-21D3D8080DAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E215068-CF55-4E02-AE85-21D3D8080DAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E215068-CF55-4E02-AE85-21D3D8080DAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55B89560-0E32-4FE9-9B8A-E0E588DDAF66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55B89560-0E32-4FE9-9B8A-E0E588DDAF66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55B89560-0E32-4FE9-9B8A-E0E588DDAF66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55B89560-0E32-4FE9-9B8A-E0E588DDAF66}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3D867BA9-FABB-4E44-ACE7-0929B966230F}
+	EndGlobalSection
+EndGlobal

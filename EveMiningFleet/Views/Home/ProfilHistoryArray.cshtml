@@ -1,0 +1,80 @@
+﻿@using Microsoft.AspNetCore.Http
+@model EveMiningFleet.Models.ViewModel.HistoryModel
+@{    var sessionUtility = _SessionUtility.DecryptSession(Context.Session.Get(_Constante._SessionUtility));}
+
+<table id="Datagrid" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>Fleet Id</th>
+            <th>Fleet commander</th>
+            <th>Opening date</th>
+            <th>Closing date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.listFleet)
+        {
+        <tr>
+            <th>
+                @item.fleet.Id
+            </th>
+            <th>
+                <div>
+                    <span class="character-images">
+                        <img src="https://images.evetech.net/characters/@item.fleet.CharacterId/portrait" title="@item.fleet.Character.Name">
+                        <img src="https://images.evetech.net/corporations/@item.fleet.CorporationId/logo" title="@item.fleet.Corporation.Name">
+                        @if (@item.fleet.AllianceId != 0)
+                        {
+                            <img src="https://images.evetech.net/alliances/@item.fleet.AllianceId/logo" title="@item.fleet.Alliance.Name">
+                        }
+                    </span>
+                </div>
+            </th>
+            <th>
+                <div>
+                        @_ToolsFrontEnd.DisplayDateTimeBasic(item.fleet.Begin,sessionUtility.TimeZone)
+                </div>
+            </th>
+
+            @if (item.fleet.End != null)
+            {
+                <th>
+                    <div>
+                            @_ToolsFrontEnd.DisplayDateTimeBasic(item.fleet.End.Value,sessionUtility.TimeZone)
+                    </div>
+                </th>
+            }
+            else
+            {
+                <th>
+                    <div>
+                        Ongoing
+                    </div>
+                </th>
+            }
+            <th>
+                <div>
+                    <a class="viewreport" asp-controller="Fleets" asp-action="Details" asp-route-FleetId="@item.fleet.Id">report</a>
+                </div>
+            </th>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Datagrid').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false
+                }
+            ],
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "orderFixed": [[0, "desc"]],
+            "searching": false
+        });
+    });
+</script>

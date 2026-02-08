@@ -1,0 +1,54 @@
+{
+    "profiles": {
+        "Project": {
+            // Indique que l’exécution se fait via un projet .NET (dotnet run)
+            "commandName": "Project",
+            "launchBrowser": true,
+            "launchUrl": "http://localhost/Home/Profil",
+            "environmentVariables": {
+                // Environnement d’exécution applicatif
+                "ENVIRONMENT": "Development",
+
+                // Chaîne de connexion base de données MySQL
+                // ⚠️ À ne JAMAIS versionner avec de vrais identifiants
+                "DB_DATA_connectionstring": "sampledataconnectionstring",
+                "DB_SESSION_connectionstring": "sampledataconnectionstring",
+
+                // Flag applicatif : activation du scan des prix
+                // 0 = désactivé, 1 = activé
+                "PRICESCAN": "1",
+
+                // Flag applicatif : activation du scan data du jeux pour trouver des minerais
+                // 0 = désactivé, 1 = activé
+                "ORESCAN": "1",
+
+                // Percentile utilisé pour le calcul du prix marché
+                "PERCENTILEPRICE": "95,0",
+
+                // Client ID OAuth EVE Online (ESI)
+                "EveESIClientId": "XXXXXXXXXXXXXXXXXXXXXXXX",
+
+                // Secret OAuth EVE Online
+                "EveESISecretKey": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+
+                // URL de callback OAuth après authentification CCP
+                // Doit correspondre EXACTEMENT à celle déclarée côté développeur CCP
+                "EveESICallbackUrl": "https://localhost/Login/CallbackCCP"
+            },
+            "applicationUrl": "http://localhost",
+            "publishAllPorts": true,
+            "httpPort": 80,
+            "useSSL": true,
+            "sslPort": 443
+        },
+        "Docker": {
+            "commandName": "Docker",
+            "launchBrowser": true,
+            "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/Home/Profil",
+            "environmentVariables": {
+                "ASPNETCORE_URLS": "http://+:80"
+            },
+            "publishAllPorts": true
+        }
+    }
+}

@@ -1,0 +1,41 @@
+﻿.footer {
+    background: var(--footer-background);
+    color: var(--footer-color);
+    padding: 2em 5em 4em 5em;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    &__row-1 {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+
+        &__text {
+            width: 40%;
+            max-width: max-content;
+            font-size: .9em;
+            text-align: justify;
+        }
+
+        &__links {
+            width: 40%;
+            margin-left: 20%;
+        }
+    }
+
+    &__legal-notice {
+        margin-top: 2em;
+    }
+
+    a {
+        color: var(--footer-links-color);
+
+        &:hover {
+            cursor: pointer;
+            text-underline-offset: 2px;
+        }
+    }
+}

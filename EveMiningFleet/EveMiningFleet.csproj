@@ -1,0 +1,92 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+    <UserSecretsId>522406bc-4e46-4b90-8256-f7bcc79205d4</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\**" />
+    <Compile Remove="Models\ESI.NET\**" />
+    <Compile Remove="wwwroot\downloadEsi\**" />
+    <Content Remove="Migrations\**" />
+    <Content Remove="Models\ESI.NET\**" />
+    <Content Remove="wwwroot\downloadEsi\**" />
+    <EmbeddedResource Remove="Migrations\**" />
+    <EmbeddedResource Remove="Models\ESI.NET\**" />
+    <EmbeddedResource Remove="wwwroot\downloadEsi\**" />
+    <None Remove="Migrations\**" />
+    <None Remove="Models\ESI.NET\**" />
+    <None Remove="wwwroot\downloadEsi\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+    <Content Remove="Properties\launchSettings.json" />
+    <Content Remove="sassconfig.json" />
+    <Content Remove="wwwroot\favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_WebToolingArtifacts Remove="Properties\launchSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Abstractions.Sass.CIBuild" Version="1.1.67" />
+    <PackageReference Include="AspNetCore.SEOHelper" Version="1.0.1" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="3.1.32" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.32" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.32" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.32" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.32">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    <PackageReference Include="MySqlConnector" Version="0.69.10" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.2.7" />
+    <PackageReference Include="Pomelo.Extensions.Caching.MySql" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+    <None Include="sassconfig.json" />
+    <None Include="wwwroot\favicon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\EveMiningFleet.Entities\EveMiningFleet.Entities.csproj" />
+    <ProjectReference Include="..\EveMiningFleet.Logic\EveMiningFleet.Logic.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Properties\sample.launchSettings.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\css\global.scss">
+      <Generator></Generator>
+   </Content>
+    <Content Update="wwwroot\css\var.scss">
+      <Generator></Generator>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="favicon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!--<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="C:\__DEV\dart-sass\sass.bat $(ProjectDir)\wwwroot\css:$(ProjectDir)\wwwroot\css" />
+  </Target>-->
+
+</Project>

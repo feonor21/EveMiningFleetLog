@@ -1,0 +1,117 @@
+﻿@using Microsoft.AspNetCore.Http
+@{ var sessionUtility = _SessionUtility.DecryptSession(Context.Session.Get(_Constante._SessionUtility)); }
+
+@model EveMiningFleet.Models.ViewModel.WhatIShouldMineModel
+
+<link rel="stylesheet" href="~/css/WhatIShouldMineStyle.css" />
+
+
+<main>
+
+
+    @if (Model.ConversionOK)
+    {
+    <section>
+        <label >For 1 m3</label>
+        <div class="Result">
+            <div class="table__border">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>VALUE COMPRESS</th>
+                            <th>Price Sell</th>
+                            <th>Price Buy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Ore in Model.AllOreModels.OrderByDescending(x => x.Value.PriceCompressedSell))
+                        {
+                            <tr>
+                                <td>
+                                    <img src="https://images.evetech.net/types/@Ore.Value.Id/icon" width="26" height="26">@Ore.Value.Name
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayPrice(Ore.Value.PriceCompressedSell.Value)
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayPrice(Ore.Value.PriceCompressedBuy.Value)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table__border">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>VALUE REPROCESS</th>
+                            <th>Price Sell</th>
+                            <th>Price Buy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Ore in Model.AllOreModels.OrderByDescending(x => x.Value.PriceRefinedSell))
+                        {
+                            <tr>
+                                <td>
+                                    <img src="https://images.evetech.net/types/@Ore.Value.Id/icon" width="26" height="26">@Ore.Value.Name
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayPrice(Ore.Value.PriceRefinedSell.Value)
+                                </td>
+                                <td>
+                                    @_ToolsFrontEnd.DisplayPrice(Ore.Value.PriceRefinedBuy.Value)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    }
+
+
+
+    <section>
+        <form asp-controller="Tools" asp-action="whatishouldmine" method="post">
+            <div class="Calcul">
+                <div class="Calcul__Reprocess">
+                    <label for="ReprocessingEfficiency">Reprocessing Efficiency % :</label>
+                    <input asp-for="ReprocessingEfficiency" type="number" value="@Model.ReprocessingEfficiency">
+                </div>
+                <div class="Calcul__select">
+                    <label for="Buyback">add manually</label>
+                    <select id="mySelect" size="1">
+                        @foreach (var Ore in Model.Allorename.OrderBy(x => x))
+                        {
+                        <option>@Ore</option>
+                        }
+                    </select>
+                    <button type="button" onclick="AddManually()">add selection</button>
+                    <script>
+                        function AddManually() {
+                            var textarea = document.getElementById('idrapport');
+                            var select = document.getElementById("mySelect");
+                            var result = select.options[select.selectedIndex].text;
+                            textarea.value = result + '\r\n' + textarea.value;
+                        }
+                    </script>
+                </div>
+            </div>
+            <div class="Rapport">
+                <label for="rapport">Rapport (Copy/paste your survey scanner here): </label>
+                <textarea asp-for="rapport" id="idrapport">@Model.rapport</textarea>
+            </div>
+            <input class="button" type="submit" value="Calculate">
+        </form>
+    </section>
+
+</main>
+
+
+
+
+

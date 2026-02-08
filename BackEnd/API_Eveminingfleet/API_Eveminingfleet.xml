@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>API_Eveminingfleet</name>
+    </assembly>
+    <members>
+        <member name="M:API_Eveminingfleet.Controllers.CharacterController.Get(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String)">
+            <summary>
+            Retrieves characters, 
+            </summary>
+            <remarks>only ONE PARAMETER!</remarks>
+            <param name="id" example="96852613">get the character by id,</param>
+            <param name="mainid" example="96852613">get all character by main id</param>
+            <param name="name" example="feonordalb">get the character by name.Withoutspace</param>
+            <response code="200">character retrieved</response>
+            <response code="204">No character in database</response>
+            <response code="400">only ONE PARAMETER!</response>
+            <response code="404">character not found</response>
+        </member>
+    </members>
+</doc>

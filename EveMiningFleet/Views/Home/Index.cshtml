@@ -1,0 +1,119 @@
+﻿<link rel="stylesheet" href="~/css/Home_IndexStyle.css" />
+
+
+
+<main>
+@* 
+    <section>
+        <h2>Tournament : october 15th to november 15th. </h2>
+        <div class="box">
+            <div class="box__text">
+                <p class="box__text__main">
+                    CCP gave me some skin codes, This month, it's Leshak.<span class="asterisk">*</span><br />
+                    <br />
+                    Mining fleets will be sorted by VOLUME. <br />
+                    TOP 1 fleet, will receive 8 skin codes. <br />
+                    TOP 2 fleet, will receive 4 skin codes. <br />
+                    TOP 3 fleet,  will receive 2 skin codes. <br />
+                    <br />
+                    
+                </p>
+                <p class="box__text__precision">
+                    <span class="asterisk">*</span>More details on <a href="https://discord.gg/wkj7Sg62q">Discord</a>
+                </p>
+            </div>
+            <div class="box__image" style="background: url('./images/MOON_MINING.jpg'); background-size:  cover; background-position: center;"></div>
+        </div>
+    </section>
+ *@
+    <section>
+        <h2>Manage your mining fleet redistribution</h2>
+        <div class="cards">
+            <div class="card">
+                <div class="card__image" style="background: url('./images/Venture_background.jpg'); background-size:  cover;">
+                    <div class="card__image__filter">
+                        <div class="card__image__filter__title">real mining</div>
+                    </div>
+                </div>
+                <p class="card__text">
+                    Each character receives what they mined
+                </p>
+            </div>
+            <div class="card">
+                <div class="card__image" style="background: url('./images/Strip_mining.png'); background-size:  cover;">
+                    <div class="card__image__filter">
+                        <div class="card__image__filter__title">redistribution<br>by volume</div>
+                    </div>
+                </div>
+                <p class="card__text">
+                    Which redistributes a part of each ore mined by the fleet in relation to the volume you mined.<br>
+                    You will then have a percentage of the overall booty
+                </p>
+            </div>
+            <div class="card">
+                <div class="card__image" style="background: url('./images/Industry.png'); background-size:  cover;">
+                    <div class="card__image__filter">
+                        <div class="card__image__filter__title">redistribution<br>by character</div>
+                    </div>
+                </div>
+                <p class="card__text">
+                    Each character will receive a fair share of each ore mined by the fleet
+                </p>
+            </div>
+            <div class="card">
+                <div class="card__image" style="background: url('./images/Noctis.jpg'); background-size:  cover;">
+                    <div class="card__image__filter">
+                        <div class="card__image__filter__title">Custom<br>redistribution</div>
+                    </div>
+                </div>
+                <p class="card__text">
+                    You have the posiblility to redistribute some proportion of the total mining amount of the fleet to people who contributed (like a Porpoise, a Miasmos, scout and defencer...)
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <a class="login login--light" asp-controller="Login" asp-action="LoginCCP"></a>
+
+    <section>
+        <h2>Profit computing in real time</h2>
+        <div class="box">
+            <div class="box__text">
+                <p class="box__text__main">
+                    Eve Mining Fleet compute in real time the price of compressed or reprocessed minerals you mined
+                </p>
+            </div>
+            <div class="box__image" style="background: url('./images/Market.png'); background-size:  cover; background-position: center;"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Fleet visibility</h2>
+        <div class="box box--reverse">
+            <div class="box__text">
+                <p class="box__text__main">
+                    Several access rights make the fleet report available to the corporation and the alliance.
+                </p>
+            </div>
+            <div class="box__image" style="background: url('./images/Citadel_attack.png'); background-size:  cover; background-position: center;"></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Timing before joining or leaving a fleet</h2>
+        <div class="box">
+            <div class="box__text">
+                <p class="box__text__main">
+                    Before joining and leaving a fleet you have to stop mining during 10 minutes<span class="asterisk">*</span>. Else you will get less or more minerals
+                </p>
+                <p class="box__text__precision">
+                    <span class="asterisk">*</span>Why these 10 minutes. This is the moment when the information from the eveonline data becomes accessible to the public.
+                </p>
+            </div>
+            <div class="box__image" style="background: url('./images/ORE_science.jpg'); background-size:  cover; background-position: center;"></div>
+        </div>
+    </section>    
+
+    <a class="login login--light" asp-controller="Login" asp-action="LoginCCP"></a>
+
+</main>

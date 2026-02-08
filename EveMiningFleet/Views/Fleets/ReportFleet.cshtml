@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Http
+@model EveMiningFleet.Entities.Tables.Fleet
+
+
+<main id="frame">
+
+</main>
+
+<script>
+    $(document).ready(function () {
+        @if (@Model.End != null)
+        {
+                <text>$("#frame").load("@Url.Action("DetailsPartial", "Fleets", new { FleetId = Model.Id})");</text>
+        }
+        else
+        {
+            <text>
+            function loadFram() {
+                $("#frame").load("@Url.Action("DetailsPartial", "Fleets", new { FleetId = Model.Id})");
+                setTimeout(loadFram, 60000);
+            }
+            loadFram()
+            </text>
+        }
+    });
+</script>
+
+
+
+
+
+

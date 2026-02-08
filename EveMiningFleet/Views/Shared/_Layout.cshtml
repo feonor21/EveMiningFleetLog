@@ -1,0 +1,92 @@
+﻿@using Microsoft.AspNetCore.Http
+@{ var sessionUtility = _SessionUtility.DecryptSession(Context.Session.Get(_Constante._SessionUtility)); }
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link runat="server" rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <link runat="server" rel="icon" href="~/favicon.ico" type="image/ico" />
+    <meta name="google-site-verification" content="PEnkfFh97zWxpONIBFYJHJtBeh_afDiWhgLzwmyndFQ" />
+
+
+
+    <title>EveMiningFleet | @ViewBag.Title </title>
+    @if (ViewBag.Index == null || ViewBag.Index == false)
+    {
+        <meta name="robots" content="noindex" />
+    }
+
+    @if (ViewBag.Description != "")
+    {
+        <meta name="Description" content="@ViewBag.Description" />
+    }
+
+    @if (ViewBag.Title == null)
+    {
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-HJ53HNQG16"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+
+            gtag('config', 'G-HJ53HNQG16');
+        </script>
+    }
+
+
+
+
+
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@300&family=Montserrat:wght@200;300;500&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/global.css" />
+    <link rel="stylesheet" href="~/css/color.css" />
+    <link rel="stylesheet" href="~/css/colordarkmode.css" />
+    <link rel="stylesheet" href="~/css/globalResponsive.css" />
+</head>
+    <body class="@(sessionUtility.darkmode ? "dark-theme" : "light-theme")">
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/js/site.js"></script>
+
+
+
+        <script type="text/javascript">
+
+            var timeZoneOffset = new Date().getTimezoneOffset();
+
+            // Créez un objet contenant la donnée que vous souhaitez envoyer
+            var dataToSend = {
+                timeZoneOffset: timeZoneOffset
+            };
+
+            // Utilisez jQuery pour effectuer une requête AJAX POST au serveur
+            $.ajax({
+                type: "POST", // Ou "GET" selon votre besoin
+                url: "/Login/SetTimeZone",
+                data: dataToSend,
+                error: function (xhr, status, error) {
+                    // Gérez les erreurs ici si nécessaire
+                    console.error("Erreur lors de l'envoi de la timezone : " + error);
+                }
+                });
+
+
+        </script>
+
+        <partial name="~/Views/Shared/_Header.cshtml" />
+
+        @RenderBody()
+
+        <partial name="~/Views/Shared/_Footer.cshtml" />
+
+        @RenderSection("Scripts", required: false)
+    </body>
+
+</html>
